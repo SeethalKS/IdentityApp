@@ -4,6 +4,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { response } from 'express';
 import { SharedService } from '../../shared/shared.service';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
+import { User } from '../../shared/models/user';
 
 @Component({
   selector: 'app-register',
@@ -19,7 +21,15 @@ errorMessages:string[]=[];
     private sharedService : SharedService,
     private router:Router,
     private formBuilder:FormBuilder
-  ){}
+  ){
+    this.accountService.user$.pipe(take(1)).subscribe({
+      next:(user:User | null)=>{
+        if(user){
+          this.router.navigateByUrl('/');
+        }
+      }
+    })
+  }
   ngOnInit(): void {
     this.initializeForm();
   }
